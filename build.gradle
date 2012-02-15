@@ -1,0 +1,15 @@
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+
+configurations.all {
+  dependencies {
+    testCompile "junit:junit:4.8"
+    compile "org.codehaus.groovy:groovy-all:1.8.4"
+  }
+  
+  repositories { 
+    mavenLocal() 
+  }
+}
+
+
