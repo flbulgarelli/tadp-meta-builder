@@ -1,9 +1,12 @@
 package metabuilder
 
+import groovy.lang.Closure
 import groovy.transform.TupleConstructor
 
 @TupleConstructor
 class PropertiesMap {
+  //TODO add support for restrictions
+  //TODO reify property objects
   Map properties
 
   def set(name, value) {

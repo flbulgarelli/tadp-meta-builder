@@ -33,12 +33,15 @@ class MetaBuilderTestDriver {
    * La estrategia de construcción del objeto (se le puede pasar la clase o un bloque de código que se comporte como factory method)
    * La estrategia de inyección de las propiedades (si es por constructor/argumento del bloque o si es por setter)"
    * 
+   * Propiedades que son colecciones, para las que se expongan métodos estilo addXXX
+   * Propiedades cuyo valor este fijo
+   * Podes establecer, para los defaults y valores fijos, tanto valores como expresiones
    * 
    * 
    */
 
   @Test
-  public void test1() throws Exception {
+  void chainedStyle()  {
     def guerreroBuilderClass =
       new MetaBuilder()
       .withMandatoryProperty('nombre')
@@ -47,7 +50,6 @@ class MetaBuilderTestDriver {
       .withOptionalProperty('puntosDeVida', 100)
       .withCollectionProperty('habilidades')
       .withTargetClass(Personaje)
-      //.withConstructorDependencyInjection()
       .build()
 
     def guerreroBuilder = guerreroBuilderClass.newInstance()
@@ -66,37 +68,45 @@ class MetaBuilderTestDriver {
       assert puntosDeVida == 100
       assert habilidades == [
         HabilidadSimple.CABALGAR,
-        HabilidadSimple.CORRER]
+        HabilidadSimple.CORRER
+      ]
     }
   }
 
 
-  //  def aldeanoBuilder =
-  //  new MetaBuilder()
-  //  .withMandatoryProperty('nombre')
-  //  .withOptionalProperty('puntosDeAtaque', 2)
-  //  .withOptionalProperty('puntosDeDefensa', 1)
-  //  .withOptionalProperty('puntosDeVida', 25)
-  //  .withFixedProperty('habilidades', [])
-  //  .withTargetClass(Personaje)
-  // // .withConstructorDependencyInjection()
-  //  .build()
-
   @Test
-  public void testName2() throws Exception {
-    def guerreroBuilder =
+  void resultingBuilderClassIsShareable()  {
+    def guerreroBuilderClass =
       new MetaBuilder()
+      .withMandatoryProperty('nombre')
+      .withCollectionProperty('habilidades')
       .withTargetClass(Personaje)
-      .withConstructorDependencyInjection()
-      .withProperties {
-        nombre()
-        puntosDeAtaque(10) { it < 50 }
-        puntosDeDefensa(2)
-        puntosDeVida(100)
-      }.withCollections { habilidades() }
       .build()
 
+    def willy = guerreroBuilderClass.newInstance()
+      .withNombre('William the conqueror')
+      .addHabilidades(HabilidadSimple.CORRER)
+      .build()
 
+    def julio = guerreroBuilderClass.newInstance()
+      .withNombre('Julio Cesar')
+      .addHabilidades(HabilidadSimple.CABALGAR)
+      .build()
+
+    assert !willy.is(julio)
+    willy.with {
+      assert nombre == 'William the conqueror'
+      assert habilidades == [HabilidadSimple.CABALGAR]
+    }
+
+    julio.with {
+      assert nombre == 'Julio Cesar'
+      assert habilidades == [HabilidadSimple.CORRER]
+    }
+  }
+
+  @Test
+  void nestedStyle()  {
     def aldeanoBuilder =
       MetaBuilder.newBuilder {
         targetClass(Personaje)
@@ -113,4 +123,57 @@ class MetaBuilderTestDriver {
         }
       }
   }
+
+  @Test
+  void optionalPropertiesMayBeNotConfigured()  {
+    fail()
+  }
+
+  @Test
+  void mandatoryPropertiesMustBeConfigured()  {
+    fail()
+  }
+
+  @Test
+  void mandatoryPropertiesMustBeNonNull()  {
+    fail()
+  }
+
+  @Test
+  void builderSupportsRestrictions() {
+    fail()
+  }
+
+  @Test
+  void globalRestrictionsAreEvaluatedAfterObjectIsBuilt() {
+    fail()
+  }
+
+  @Test
+  void propertyRestrictionsAreEvaluatedBeforePropertyIsSet() {
+    fail()
+  }
+
+  @Test
+  void builderSupportsFactoryMethodClosure()  {
+    fail()
+  }
+
+  @Test
+  void builderSupportsConstructorInjection()  {
+    fail()
+  }
+
+  //  def aldeanoBuilder =
+  //  new MetaBuilder()
+  //  .withMandatoryProperty('nombre')
+  //  .withOptionalProperty('puntosDeAtaque', 2)
+  //  .withOptionalProperty('puntosDeDefensa', 1)
+  //  .withOptionalProperty('puntosDeVida', 25)
+  //  .withFixedProperty('habilidades', [])
+  //  .withTargetClass(Personaje)
+  // // .withConstructorDependencyInjection()
+  //  .build()
+
+
 }

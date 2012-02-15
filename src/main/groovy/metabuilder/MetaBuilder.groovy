@@ -92,18 +92,9 @@ class MetaBuilder {
     this
   }
 
-
   GenericBuilderClass build() {
     assert constructor != null, "Must set a constructor"
     metaClazz.initialize()
     new GenericBuilderClass(metaClazz, propertiesInitialValues, constructor, dependencyInjector)
   }
 }
-
-
-
-
-
-
-
-
