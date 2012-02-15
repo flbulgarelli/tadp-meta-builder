@@ -12,6 +12,8 @@
 
 import static org.junit.Assert.*
 
+import metabuilder.MetaBuilder;
+
 import org.junit.Test
 
 /**
