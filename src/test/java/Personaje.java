@@ -25,14 +25,15 @@ public class Personaje {
   private int puntosDeVida;
   private Collection<Habilidad> habilidades;
 
-  public Personaje(String nombre, int puntosDeAtaque, int puntosDeDefensa, int puntosDeVida,
-    Collection<Habilidad> habilidades) {
-    this.nombre = nombre;
-    this.puntosDeAtaque = puntosDeAtaque;
-    this.puntosDeDefensa = puntosDeDefensa;
-    this.puntosDeVida = puntosDeVida;
-    this.habilidades = habilidades;
-  }
+  // public Personaje(String nombre, int puntosDeAtaque, int puntosDeDefensa,
+  // int puntosDeVida,
+  // Collection<Habilidad> habilidades) {
+  // this.nombre = nombre;
+  // this.puntosDeAtaque = puntosDeAtaque;
+  // this.puntosDeDefensa = puntosDeDefensa;
+  // this.puntosDeVida = puntosDeVida;
+  // this.habilidades = habilidades;
+  // }
 
   // dont'care
 

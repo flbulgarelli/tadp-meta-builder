@@ -17,10 +17,10 @@ class ClosureConstructor implements Constructor {
 
 @TupleConstructor
 class NewInstanceConstructor implements Constructor {
-  final targetClass
+  Class targetClass
 
   def newInstance(args) {
-    targetClass.newInstance(args)
+    targetClass.newInstance(args as Object[])
   }
 }
 

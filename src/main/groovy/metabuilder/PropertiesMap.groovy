@@ -11,7 +11,7 @@ class PropertiesMap {
   }
 
   def add(name, value) {
-    get(name) << value
+    get(name) << value //FIXME
   }
 
   def get(name) {
@@ -23,7 +23,7 @@ class PropertiesMap {
   }
 
   def copyTo(destination) {
-    properties.each { name, value -> destination.setProperty(name, _eval(value)) }
+    properties.each { name, value -> destination[name] = _eval(value) }
   }
 
   protected def _eval(value){

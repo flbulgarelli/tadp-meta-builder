@@ -17,12 +17,13 @@ class GenericBuilder {
   }
 
   def _setMandatoryProperty(name, value) {
-    assert value != null,
+    assert value != null
     _setOptionalProperty(name, value)
   }
 
   def _addCollectionPropertyElement(name, value){
     properties.add(name, value)
+    this
   }
 
   def build() {

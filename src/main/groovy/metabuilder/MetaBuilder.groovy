@@ -23,7 +23,7 @@ import metabuilder.injector.SetterInjector
  */
 class MetaBuilder {
 
-  def metaClazz = new ExpandoMetaClass(GenericBuilder)
+  MetaClass metaClazz = new ExpandoMetaClass(GenericBuilder)
   def propertiesInitialValues = [:]
   def dependencyInjector = new SetterInjector()
   def constructor
@@ -66,9 +66,9 @@ class MetaBuilder {
   }
 
   MetaBuilder withCollectionProperty(name) {
-    metaClazz.setProperty("add${name.capitalize()}") {  delegate._addCollectionPropertyElement(it)  }
-    propertiesInitialValues[name] = {[]}
-    this
+    _withCollectionProperty(name) { GenericBuilder builder, value ->
+      builder._addCollectionPropertyElement(name, value)
+    }
   }
 
   MetaBuilder withTargetClass(targetClass) {
@@ -86,9 +86,16 @@ class MetaBuilder {
     this
   }
 
+  protected def _withCollectionProperty(name, closure) {
+    metaClazz.setProperty("add${name.capitalize()}") { closure(delegate, it) }
+    propertiesInitialValues[name] = {[]}
+    this
+  }
+
 
   GenericBuilderClass build() {
     assert constructor != null, "Must set a constructor"
+    metaClazz.initialize()
     new GenericBuilderClass(metaClazz, propertiesInitialValues, constructor, dependencyInjector)
   }
 }

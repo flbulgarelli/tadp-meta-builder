@@ -11,10 +11,11 @@
 
 
 import static org.junit.Assert.*
-
-import metabuilder.MetaBuilder;
+import metabuilder.MetaBuilder
 
 import org.junit.Test
+
+import Personaje.HabilidadSimple
 
 /**
  * @author flbulgarelli
@@ -37,8 +38,8 @@ class MetaBuilderTestDriver {
    */
 
   @Test
-  public void testName() throws Exception {
-    def guerreroBuilder =
+  public void test1() throws Exception {
+    def guerreroBuilderClass =
       new MetaBuilder()
       .withMandatoryProperty('nombre')
       .withOptionalProperty('puntosDeAtaque', 10)
@@ -46,22 +47,40 @@ class MetaBuilderTestDriver {
       .withOptionalProperty('puntosDeVida', 100)
       .withCollectionProperty('habilidades')
       .withTargetClass(Personaje)
-      .withConstructorDependencyInjection()
+      //.withConstructorDependencyInjection()
       .build()
 
+    def guerreroBuilder = guerreroBuilderClass.newInstance()
 
-    def aldeanoBuilder =
-      new MetaBuilder()
-      .withMandatoryProperty('nombre')
-      .withOptionalProperty('puntosDeAtaque', 2)
-      .withOptionalProperty('puntosDeDefensa', 1)
-      .withOptionalProperty('puntosDeVida', 25)
-      .withFixedProperty('habilidades', [])
-      .withTargetClass(Personaje)
-      .withConstructorDependencyInjection()
+    def alejandroMagno = guerreroBuilder
+      .withNombre('Alejandro Magno')
+      .withPuntosDeAtaque(25)
+      .addHabilidades(HabilidadSimple.CABALGAR)
+      .addHabilidades(HabilidadSimple.CORRER)
       .build()
+
+    alejandroMagno.with {
+      assert nombre == 'Alejandro Magno'
+      assert puntosDeAtaque == 25
+      assert puntosDeDefensa == 2
+      assert puntosDeVida == 100
+      assert habilidades == [
+        HabilidadSimple.CABALGAR,
+        HabilidadSimple.CORRER]
+    }
   }
 
+
+  //  def aldeanoBuilder =
+  //  new MetaBuilder()
+  //  .withMandatoryProperty('nombre')
+  //  .withOptionalProperty('puntosDeAtaque', 2)
+  //  .withOptionalProperty('puntosDeDefensa', 1)
+  //  .withOptionalProperty('puntosDeVida', 25)
+  //  .withFixedProperty('habilidades', [])
+  //  .withTargetClass(Personaje)
+  // // .withConstructorDependencyInjection()
+  //  .build()
 
   @Test
   public void testName2() throws Exception {
