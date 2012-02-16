@@ -3,6 +3,7 @@ package metabuilder
 import metabuilder.constructor.ClosureConstructor
 import metabuilder.constructor.NewInstanceConstructor
 import metabuilder.injector.SetterInjector
+import metabuilder.internal.MethodMissingDelegate
 
 /*
  Copyright (c) 2012, The Staccato-Commons Team
@@ -96,5 +97,46 @@ class MetaBuilder {
     assert constructor != null, "Must set a constructor"
     metaClazz.initialize()
     new GenericBuilderClass(metaClazz, propertiesInitialValues, constructor, dependencyInjector)
+  }
+
+  static GenericBuilderClass newBuilder(Closure closure) {
+    def builder = new MetaBuilder()
+    closure.delegate = new NewBuilderDelegate(metaBuilder: builder)
+    closure()
+    builder.build()
+  }
+}
+
+class NewBuilderDelegate {
+  MetaBuilder metaBuilder
+  def targetClass(clazz) {
+    metaBuilder.withTargetClass(clazz)
+  }
+  //  def constructorInjection() {
+  //    metaBuilder.with
+  //  }
+
+  //  constructorInjection()
+  def mandatoryProperties(closure) {
+    _property(closure) {name, args ->
+      metaBuilder.withMandatoryProperty(name)
+    }
+  }
+
+  def optionalProperties(closure) {
+    _property(closure) {name, args ->
+      metaBuilder.withOptionalProperty(name, args.find())
+    }
+  }
+
+  def fixedProperties(closure) {
+    _property(closure) {name, args ->
+      metaBuilder.withFixedProperty(name, args.first())
+    }
+  }
+
+  protected def _property(Closure closure, methodMissingClosure) {
+    closure.delegate = new MethodMissingDelegate(methodMissingClosure)
+    closure()
   }
 }

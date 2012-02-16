@@ -110,18 +110,31 @@ class MetaBuilderTestDriver {
     def aldeanoBuilder =
       MetaBuilder.newBuilder {
         targetClass(Personaje)
-        constructorInjection()
+        //constructorInjection()
         mandatoryProperties { nombre()  }
         optionalProperties {
-          puntosDeAtaque(2) { it < 20 }
-          puntosDeDefensa(1) { it < 5 }
-          puntosDeVida(25) { it < 40 }
+          puntosDeAtaque(2) //{ it < 20 }
+          puntosDeDefensa(1)// { it < 5 }
+          puntosDeVida(25)// { it < 40 }
         }
-        fixedProperties { habilidades([]) }
-        check {
-          it.puntosDeAtaque > it.puntosDefensa
-        }
+        fixedProperties {  habilidades {[]} }
+        //        check {
+        //          it.puntosDeAtaque > it.puntosDefensa
+        //        }
       }
+
+    def unAldeano= aldeanoBuilder.newInstance()
+      .withNombre('Pedro')
+      .withPuntosDeDefensa(4)
+      .build()
+
+    unAldeano.with {
+      assert nombre == 'Pedro'
+      assert puntosDeAtaque == 2
+      assert puntosDeDefensa == 4
+      assert puntosDeVida == 25
+      assert habilidades == []
+    }
   }
 
   @Test
@@ -174,6 +187,7 @@ class MetaBuilderTestDriver {
   //  .withTargetClass(Personaje)
   // // .withConstructorDependencyInjection()
   //  .build()
+
 
 
 }
