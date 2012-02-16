@@ -54,7 +54,7 @@ class MetaBuilder {
    *  la propiedad opcional en caso de no especiicarse ningún valor
    * @return this
    */
-  MetaBuilder withOptionalProperty(name, defaultValue) {
+  MetaBuilder withOptionalProperty(name, defaultValue = null) {
     _withProperty(name, defaultValue) { GenericBuilder builder, value ->
       builder._setOptionalProperty(name, value)
     }

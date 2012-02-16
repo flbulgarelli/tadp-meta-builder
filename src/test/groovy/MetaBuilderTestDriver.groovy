@@ -13,6 +13,7 @@
 import static org.junit.Assert.*
 import metabuilder.MetaBuilder
 
+import org.codehaus.groovy.runtime.powerassert.PowerAssertionError
 import org.junit.Test
 
 import Personaje.HabilidadSimple
@@ -139,17 +140,53 @@ class MetaBuilderTestDriver {
 
   @Test
   void optionalPropertiesMayBeNotConfigured()  {
-    fail()
+    def guerreroBuilderClass =
+      new MetaBuilder()
+      .withOptionalProperty('nombre')
+      .withTargetClass(Personaje)
+      .build()
+
+    def guerrero = guerreroBuilderClass.newInstance().build()
+    assert guerrero.nombre == null
   }
 
-  @Test
+  @Test(expected = PowerAssertionError)
   void mandatoryPropertiesMustBeConfigured()  {
-    fail()
+    def guerreroBuilderClass =
+      new MetaBuilder()
+      .withMandatoryProperty('nombre')
+      .withTargetClass(Personaje)
+      .build()
+
+    guerreroBuilderClass.newInstance().build()
+  }
+
+  @Test(expected = PowerAssertionError)
+  void mandatoryPropertiesMustBeNonNull()  {
+    def guerreroBuilderClass =
+      new MetaBuilder()
+      .withMandatoryProperty('nombre')
+      .withTargetClass(Personaje)
+      .build()
+
+    guerreroBuilderClass.newInstance().withNombre(null).build()t
   }
 
   @Test
-  void mandatoryPropertiesMustBeNonNull()  {
-    fail()
+  void builderPropertiesSupportExpressionsAsDefaultValues() {
+    int count = 0
+    def guerreroBuilderClass =
+      new MetaBuilder().newBuilder {
+        targetClass(Personaje)
+        optionalProperties {
+          nombre { "guerrero" + count++ }
+        }
+      }
+
+    def guerreroBuilder = guerreroBuilderClass.newInstance()
+
+    assert guerreroBuilder.build().nombre == "guerrero0"
+    assert guerreroBuilder.build().nombre == "guerrero1"
   }
 
   @Test
