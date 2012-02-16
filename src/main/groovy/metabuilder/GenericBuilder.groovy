@@ -11,18 +11,8 @@ class GenericBuilder {
   Constructor constructor
   DependencyInjector dependencyInjector
 
-  def _setOptionalProperty(name, value) {
+  def _setProperty(name, value) {
     properties.set(name, value)
-    this
-  }
-
-  def _setMandatoryProperty(name, value) {
-    assert value != null
-    _setOptionalProperty(name, value)
-  }
-
-  def _addCollectionPropertyElement(name, value){
-    properties.add(name, value)
     this
   }
 

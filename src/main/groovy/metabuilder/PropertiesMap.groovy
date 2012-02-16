@@ -1,40 +1,35 @@
 package metabuilder
 
-import groovy.lang.Closure
 import groovy.transform.TupleConstructor
 
 @TupleConstructor
 class PropertiesMap {
-  //TODO add support for restrictions
-  //TODO reify property objects
   Map properties
 
   def set(name, value) {
-    properties[name] = value
+    properties[name].set(value)
   }
 
-  def add(name, value) {
-    get(name) << value //FIXME
+  def copyTo(target) {
+    properties.each { name, property -> property.setToTarget(target)}
+  }
+}
+
+class PropertyClassesMap {
+  Map propertyClasses = [:]
+
+  def leftShift(propertyClass) {
+    propertyClasses[propertyClass.name] = propertyClass
   }
 
-  def get(name) {
-    _eval(properties[name])
+  def copyTo(expandoMetaClass) {
+    propertyClasses.each { name, propertyClass -> propertyClass.addTo(expandoMetaClass)}
   }
 
-  def values() {
-    properties.values()
-  }
-
-  def copyTo(destination) {
-    properties.each { name, value -> destination[name] = _eval(value) }
-  }
-
-  protected def _eval(value){
-    value
-  }
-
-  protected def _eval(Closure value){
-    value()
+  def newPropertiesMap() {
+    new PropertiesMap(propertyClasses.collectEntries { name, property ->
+      [ (name) : property.newProperty()]
+    })
   }
 }
 

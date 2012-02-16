@@ -25,7 +25,7 @@ import metabuilder.internal.MethodMissingDelegate
 class MetaBuilder {
 
   MetaClass metaClazz = new ExpandoMetaClass(GenericBuilder)
-  def propertiesInitialValues = [:]
+  def propertyClassesMap = new PropertyClassesMap()
   def dependencyInjector = new SetterInjector()
   def constructor
 
@@ -38,9 +38,7 @@ class MetaBuilder {
    * @return this
    */
   MetaBuilder withMandatoryProperty(name) {
-    _withProperty(name, null) { GenericBuilder builder,  value ->
-      builder._setMandatoryProperty(name, value)
-    }
+    _withPropertyClass(name, PropertyClasses.mandatory(name))
   }
 
   /**
@@ -55,21 +53,15 @@ class MetaBuilder {
    * @return this
    */
   MetaBuilder withOptionalProperty(name, defaultValue = null) {
-    _withProperty(name, defaultValue) { GenericBuilder builder, value ->
-      builder._setOptionalProperty(name, value)
-    }
+    _withPropertyClass(name, PropertyClasses.optional(name, defaultValue))
   }
 
   MetaBuilder withFixedProperty(name, value) {
-    _withProperty(name, value) {
-      throw new IllegalStateException("Property $name is not configurable")
-    }
+    _withPropertyClass(name, PropertyClasses.fixed(name, value))
   }
 
   MetaBuilder withCollectionProperty(name) {
-    _withCollectionProperty(name) { GenericBuilder builder, value ->
-      builder._addCollectionPropertyElement(name, value)
-    }
+    _withPropertyClass(name, PropertyClasses.collection(name))
   }
 
   MetaBuilder withTargetClass(targetClass) {
@@ -81,22 +73,17 @@ class MetaBuilder {
     constructor = new ClosureConstructor(closure)
   }
 
-  protected def _withProperty(name, defaultValue, closure) {
-    metaClazz.setProperty("with${name.capitalize()}") { closure(delegate, it) }
-    propertiesInitialValues[name] = defaultValue
+  protected def _withPropertyClass(name, propertyClass) {
+    propertyClassesMap << propertyClass
     this
   }
 
-  protected def _withCollectionProperty(name, closure) {
-    metaClazz.setProperty("add${name.capitalize()}") { closure(delegate, it) }
-    propertiesInitialValues[name] = {[]}
-    this
-  }
 
   GenericBuilderClass build() {
     assert constructor != null, "Must set a constructor"
+    propertyClassesMap.copyTo(metaClazz)
     metaClazz.initialize()
-    new GenericBuilderClass(metaClazz, propertiesInitialValues, constructor, dependencyInjector)
+    new GenericBuilderClass(metaClazz, propertyClassesMap, constructor, dependencyInjector)
   }
 
   static GenericBuilderClass newBuilder(Closure closure) {

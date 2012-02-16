@@ -16,6 +16,6 @@ class GenericBuilderClass {
   }
 
   def newPropertiesMap() {
-    new PropertiesMap(propertiesInitialValues.clone())
+    propertiesInitialValues.newPropertiesMap()
   }
 }

@@ -13,7 +13,6 @@
 import static org.junit.Assert.*
 import metabuilder.MetaBuilder
 
-import org.codehaus.groovy.runtime.powerassert.PowerAssertionError
 import org.junit.Test
 
 import Personaje.HabilidadSimple
@@ -58,8 +57,8 @@ class MetaBuilderTestDriver {
     def alejandroMagno = guerreroBuilder
       .withNombre('Alejandro Magno')
       .withPuntosDeAtaque(25)
-      .addHabilidades(HabilidadSimple.CABALGAR)
-      .addHabilidades(HabilidadSimple.CORRER)
+      .withHabilidades(HabilidadSimple.CABALGAR)
+      .withHabilidades(HabilidadSimple.CORRER)
       .build()
 
     alejandroMagno.with {
@@ -86,23 +85,23 @@ class MetaBuilderTestDriver {
 
     def willy = guerreroBuilderClass.newInstance()
       .withNombre('William the conqueror')
-      .addHabilidades(HabilidadSimple.CORRER)
+      .withHabilidades(HabilidadSimple.CORRER)
       .build()
 
     def julio = guerreroBuilderClass.newInstance()
       .withNombre('Julio Cesar')
-      .addHabilidades(HabilidadSimple.CABALGAR)
+      .withHabilidades(HabilidadSimple.CABALGAR)
       .build()
 
     assert !willy.is(julio)
     willy.with {
       assert nombre == 'William the conqueror'
-      assert habilidades == [HabilidadSimple.CABALGAR]
+      assert habilidades == [HabilidadSimple.CORRER]
     }
 
     julio.with {
       assert nombre == 'Julio Cesar'
-      assert habilidades == [HabilidadSimple.CORRER]
+      assert habilidades == [HabilidadSimple.CABALGAR]
     }
   }
 
@@ -150,7 +149,7 @@ class MetaBuilderTestDriver {
     assert guerrero.nombre == null
   }
 
-  @Test(expected = PowerAssertionError)
+  @Test(expected = AssertionError)
   void mandatoryPropertiesMustBeConfigured()  {
     def guerreroBuilderClass =
       new MetaBuilder()
@@ -161,7 +160,7 @@ class MetaBuilderTestDriver {
     guerreroBuilderClass.newInstance().build()
   }
 
-  @Test(expected = PowerAssertionError)
+  @Test(expected = AssertionError)
   void mandatoryPropertiesMustBeNonNull()  {
     def guerreroBuilderClass =
       new MetaBuilder()
@@ -169,7 +168,7 @@ class MetaBuilderTestDriver {
       .withTargetClass(Personaje)
       .build()
 
-    guerreroBuilderClass.newInstance().withNombre(null).build()t
+    guerreroBuilderClass.newInstance().withNombre(null).build()
   }
 
   @Test
