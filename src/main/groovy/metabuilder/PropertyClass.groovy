@@ -101,6 +101,7 @@ class CollectionPropertyClass extends SimplePropertyClass {
 class Restriction {
   final condition
   final message
+
   def check(value) {
     assert condition(value), message
   }

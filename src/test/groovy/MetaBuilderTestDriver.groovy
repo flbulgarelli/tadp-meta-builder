@@ -182,10 +182,10 @@ class MetaBuilderTestDriver {
         }
       }
 
-    def guerreroBuilder = guerreroBuilderClass.newInstance()
+    def guerreroBuilder = guerreroBuilderClass
 
-    assert guerreroBuilder.build().nombre == "guerrero0"
-    assert guerreroBuilder.build().nombre == "guerrero1"
+    assert guerreroBuilder.newInstance().build().nombre == "guerrero0"
+    assert guerreroBuilder.newInstance().build().nombre == "guerrero1"
   }
 
   @Test
