@@ -9,22 +9,21 @@ import Personaje.HabilidadSimple
  * @author flbulgarelli
  * 
  */
-class MetaBuilderTabularDSLTestDriver {
+class MetaBuilderBlockDSLTestDriver {
 
   /* Otra variante de DSL, empleando parametros etiquetados, 
    * un poco más redundante, 
    * pero quizás mas intuitivo */
-
+  
   @Test
-  void tabularStyle()  {
+  void blockStyle()  {
     def aldeanoBuilder =
-      MetaBuilder.buildTabular(Personaje) {
-        type      |     name           |   defaultValue     | check
-        mandatory | 'nombre'           |   null             | { it.size() > 4 }
-        optional  | 'puntosDeAtaque'   |   2                | null
-        optional  | 'puntosDeDefensa'  |   1                | {it < 5}
-        optional  | 'puntosDeVida'     |   2                | {it < 40}
-        fixed     | 'habilidades'      |  {[]}              | null
+      MetaBuilder.buildBlock(Personaje) {
+        mandatory name: 'nombre',                         check: { it.size() > 4 }
+        optional  name: 'puntosDeAtaque',  default: 2
+        optional  name: 'puntosDeDefensa', default: 1,    check: {it < 5}
+        optional  name: 'puntosDeVida',    default: 25,   check: {it < 40}
+        fixed     name: 'habilidades',     default: {[]}
       }
 
     def unAldeano= aldeanoBuilder.build {
@@ -40,4 +39,5 @@ class MetaBuilderTabularDSLTestDriver {
       assert habilidades == []
     }
   }
+
 }

@@ -16,7 +16,7 @@ class MetaBuilderNestedDSLTestDriver {
   @Test
   void nestedStyle()  {
     def aldeanoBuilder =
-      MetaBuilder.newBuilderClass(Personaje) {        
+      MetaBuilder.build(Personaje) {        
         mandatoryProperties { 
           nombre  
         }
@@ -53,7 +53,7 @@ class MetaBuilderNestedDSLTestDriver {
   @Test
   void optionalPropertiesMayBeNotConfigured()  {
     def guerreroBuilderClass =
-      MetaBuilder.newBuilderClass(Personaje) {
+      MetaBuilder.build(Personaje) {
         optionalProperties {
           nombre
         }      
@@ -67,7 +67,7 @@ class MetaBuilderNestedDSLTestDriver {
   @Test(expected = AssertionError)
   void mandatoryPropertiesMustBeConfigured()  {
     def guerreroBuilderClass =
-      MetaBuilder.newBuilderClass(Personaje) {
+      MetaBuilder.build(Personaje) {
        mandatoryProperties { 
          nombre
        }
@@ -78,7 +78,7 @@ class MetaBuilderNestedDSLTestDriver {
   @Test(expected = AssertionError)
   void mandatoryPropertiesMustBeNonNull()  {
     def guerreroBuilderClass =
-      MetaBuilder.newBuilderClass(Personaje) {
+      MetaBuilder.build(Personaje) {
       mandatoryProperties {
         nombre
       }
@@ -90,7 +90,7 @@ class MetaBuilderNestedDSLTestDriver {
   void builderPropertiesSupportExpressionsAsDefaultValues() {
     int count = 0
     def guerreroBuilderClass = 
-      MetaBuilder.newBuilderClass(Personaje) {        
+      MetaBuilder.build(Personaje) {        
         optionalProperties {
           nombre { "guerrero" + count++ }
         }
