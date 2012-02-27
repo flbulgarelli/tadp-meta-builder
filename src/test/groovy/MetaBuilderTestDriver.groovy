@@ -37,8 +37,10 @@ class MetaBuilderTestDriver {
    * Propiedades cuyo valor este fijo
    * Podes establecer, para los defaults y valores fijos, tanto valores como expresiones
    * 
-   * 
    */
+  
+  
+  /*Introducción: Una interfaz muy simple de mensajes encadenados, estilo Java. */
 
   @Test
   void chainedStyle()  {
@@ -105,12 +107,12 @@ class MetaBuilderTestDriver {
     }
   }
 
+  /* Un DSL más Groovy, empleando bloques anidados */
+  
   @Test
   void nestedStyle()  {
     def aldeanoBuilder =
-      MetaBuilder.newBuilder {
-        targetClass(Personaje)
-        //constructorInjection()
+      MetaBuilder.newBuilder(Personaje) {        
         mandatoryProperties { nombre()  }
         optionalProperties {
           puntosDeAtaque(2) //{ it < 20 }
@@ -118,9 +120,6 @@ class MetaBuilderTestDriver {
           puntosDeVida(25)// { it < 40 }
         }
         fixedProperties {  habilidades {[]} }
-        //        check {
-        //          it.puntosDeAtaque > it.puntosDefensa
-        //        }
       }
 
     def unAldeano= aldeanoBuilder.newInstance()
@@ -140,10 +139,11 @@ class MetaBuilderTestDriver {
   @Test
   void optionalPropertiesMayBeNotConfigured()  {
     def guerreroBuilderClass =
-      new MetaBuilder()
-      .withOptionalProperty('nombre')
-      .withTargetClass(Personaje)
-      .build()
+      MetaBuilder.newBuilder(Personaje) {
+      optionalProperties {
+        nombre()
+      }      
+    }
 
     def guerrero = guerreroBuilderClass.newInstance().build()
     assert guerrero.nombre == null
@@ -152,31 +152,30 @@ class MetaBuilderTestDriver {
   @Test(expected = AssertionError)
   void mandatoryPropertiesMustBeConfigured()  {
     def guerreroBuilderClass =
-      new MetaBuilder()
-      .withMandatoryProperty('nombre')
-      .withTargetClass(Personaje)
-      .build()
-
+      MetaBuilder.newBuilder(Personaje) {
+       mandatoryProperties { 
+         nombre()
+       }
+      }
     guerreroBuilderClass.newInstance().build()
   }
 
   @Test(expected = AssertionError)
   void mandatoryPropertiesMustBeNonNull()  {
     def guerreroBuilderClass =
-      new MetaBuilder()
-      .withMandatoryProperty('nombre')
-      .withTargetClass(Personaje)
-      .build()
-
+      MetaBuilder.newBuilder(Personaje) {
+      mandatoryProperties {
+        nombre()
+      }
+    }
     guerreroBuilderClass.newInstance().withNombre(null).build()
   }
 
   @Test
   void builderPropertiesSupportExpressionsAsDefaultValues() {
     int count = 0
-    def guerreroBuilderClass =
-      new MetaBuilder().newBuilder {
-        targetClass(Personaje)
+    def guerreroBuilderClass = 
+      MetaBuilder.newBuilder(Personaje) {        
         optionalProperties {
           nombre { "guerrero" + count++ }
         }
@@ -213,16 +212,6 @@ class MetaBuilderTestDriver {
     fail()
   }
 
-  //  def aldeanoBuilder =
-  //  new MetaBuilder()
-  //  .withMandatoryProperty('nombre')
-  //  .withOptionalProperty('puntosDeAtaque', 2)
-  //  .withOptionalProperty('puntosDeDefensa', 1)
-  //  .withOptionalProperty('puntosDeVida', 25)
-  //  .withFixedProperty('habilidades', [])
-  //  .withTargetClass(Personaje)
-  // // .withConstructorDependencyInjection()
-  //  .build()
 
 
 

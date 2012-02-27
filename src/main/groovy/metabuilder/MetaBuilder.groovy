@@ -85,24 +85,25 @@ class MetaBuilder {
     metaClazz.initialize()
     new GenericBuilderClass(metaClazz, propertyClassesMap, constructor, dependencyInjector)
   }
-
-  static GenericBuilderClass newBuilder(Closure closure) {
-    def builder = new MetaBuilder()
-    closure.delegate = new NewBuilderDelegate(metaBuilder: builder)
-    closure()
-    builder.build()
+  
+  static GenericBuilderClass newBuilder(Class targetClass, buildClosure) {
+    _buildWithClosure(new MetaBuilder().withTargetClass(targetClass), buildClosure)
+  }
+  
+  static GenericBuilderClass newBuilder(Closure factoryClosure, buildClosure) {
+    _buildWithClosure(new MetaBuilder().withFactoryClosure(factoryClosure), buildClosure)
+  }
+  
+  private static GenericBuilderClass _buildWithClosure(metaBuilder, Closure buildClosure) {
+    buildClosure.delegate = new NewBuilderDelegate(metaBuilder: metaBuilder)
+    buildClosure()
+    metaBuilder.build()
   }
 }
 
 class NewBuilderDelegate {
   MetaBuilder metaBuilder
-  def targetClass(clazz) {
-    metaBuilder.withTargetClass(clazz)
-  }
-  //  def constructorInjection() {
-  //    metaBuilder.with
-  //  }
-
+  
   //  constructorInjection()
   def mandatoryProperties(closure) {
     _property(closure) {name, args ->
