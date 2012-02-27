@@ -86,7 +86,7 @@ class MetaBuilder {
     new GenericBuilderClass(metaClazz, propertyClassesMap, constructor, dependencyInjector)
   }
   
-  static GenericBuilderClass newBuilder(Class targetClass, buildClosure) {
+  static GenericBuilderClass newBuilderClass(Class targetClass, buildClosure) {
     _buildWithClosure(new MetaBuilder().withTargetClass(targetClass), buildClosure)
   }
   

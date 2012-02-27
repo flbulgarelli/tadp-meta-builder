@@ -112,14 +112,18 @@ class MetaBuilderTestDriver {
   @Test
   void nestedStyle()  {
     def aldeanoBuilder =
-      MetaBuilder.newBuilder(Personaje) {        
-        mandatoryProperties { nombre()  }
+      MetaBuilder.newBuilderClass(Personaje) {        
+        mandatoryProperties { 
+          nombre  
+        }
         optionalProperties {
           puntosDeAtaque(2) //{ it < 20 }
           puntosDeDefensa(1)// { it < 5 }
           puntosDeVida(25)// { it < 40 }
         }
-        fixedProperties {  habilidades {[]} }
+        fixedProperties {  
+          habilidades {[]} 
+        }
       }
 
     def unAldeano= aldeanoBuilder.newInstance()
@@ -135,11 +139,11 @@ class MetaBuilderTestDriver {
       assert habilidades == []
     }
   }
-
+  
   @Test
   void optionalPropertiesMayBeNotConfigured()  {
     def guerreroBuilderClass =
-      MetaBuilder.newBuilder(Personaje) {
+      MetaBuilder.newBuilderClass(Personaje) {
       optionalProperties {
         nombre
       }      
@@ -152,7 +156,7 @@ class MetaBuilderTestDriver {
   @Test(expected = AssertionError)
   void mandatoryPropertiesMustBeConfigured()  {
     def guerreroBuilderClass =
-      MetaBuilder.newBuilder(Personaje) {
+      MetaBuilder.newBuilderClass(Personaje) {
        mandatoryProperties { 
          nombre
        }
@@ -163,7 +167,7 @@ class MetaBuilderTestDriver {
   @Test(expected = AssertionError)
   void mandatoryPropertiesMustBeNonNull()  {
     def guerreroBuilderClass =
-      MetaBuilder.newBuilder(Personaje) {
+      MetaBuilder.newBuilderClass(Personaje) {
       mandatoryProperties {
         nombre
       }
@@ -175,7 +179,7 @@ class MetaBuilderTestDriver {
   void builderPropertiesSupportExpressionsAsDefaultValues() {
     int count = 0
     def guerreroBuilderClass = 
-      MetaBuilder.newBuilder(Personaje) {        
+      MetaBuilder.newBuilderClass(Personaje) {        
         optionalProperties {
           nombre { "guerrero" + count++ }
         }
@@ -185,6 +189,34 @@ class MetaBuilderTestDriver {
 
     assert guerreroBuilder.newInstance().build().nombre == "guerrero0"
     assert guerreroBuilder.newInstance().build().nombre == "guerrero1"
+  }
+  
+  /* Otra variante de DSL, empleando parametros etiquetados, 
+   * un poco más redundante, 
+   * pero quizás mas intuitivo */
+  @Test
+  void blockStyle()  {
+    def aldeanoBuilder =
+      MetaBuilder.newBuilderClass(Personaje) {
+        mandatory name: 'nombre',                         check: { it.size() > 4 }
+        optional  name: 'puntosDeAtaque',  default: 2
+        optional  name: 'puntosDeDefensa', default: 1,    check: {it < 5}
+        optional  name: 'puntosDeVida',    default: 25,   check: {it < 40}
+        fixed     name: 'habilidades',     default: {[]}
+      }
+
+    def unAldeano= aldeanoBuilder.newInstance()
+      .withNombre('Pedro')
+      .withPuntosDeDefensa(4)
+      .build()
+
+    unAldeano.with {
+      assert nombre == 'Pedro'
+      assert puntosDeAtaque == 2
+      assert puntosDeDefensa == 4
+      assert puntosDeVida == 25
+      assert habilidades == []
+    }
   }
 
   @Test
