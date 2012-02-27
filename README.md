@@ -4,8 +4,8 @@ Cansados de escribir una y otra vez builders a mano, queremos construir un MetaB
 el cual nos permita especificar, empleando un DSL simple, al menos los siguientes aspectos de un builder genérico:
 
 * Cuales son las propiedades que se pueden configurar: un builder genérico no 
-  configurará a discreción cualquier propiedad que le digamos, sino solamente las que le indiquemos
-* Cuales propiedades son opcionales, y su valor por defecto
+  configurará a discreción cualquier propiedad, sino solamente un subconjunto que le indiquemos
+* Cuales propiedades son opcionales, cual es y su valor por defecto
 * Validaciones que se puedan realizar sobre las propiedades, y sobre el objeto antes y después de ser construido
 * La estrategia de construcción del objeto (se le puede pasar la clase o un bloque de código que se comporte como factory method)
 * La estrategia de inyección de las propiedades (si es por constructor/argumento del bloque o si es por setter)
@@ -25,6 +25,7 @@ el caso de uso típico será:
 # Que hay aquí
 
 En este proyecto contiene pruebas de concepto de 4 estilos diferentes de DSLs, desde mas sencillos hasta más complejos:
+
 * Estilo mensajes encadenados (ChainedStyle): nada raro, lo mismo que se podría lograr en Java Ej:
 
 ```groovy
