@@ -11,9 +11,7 @@ import Personaje.HabilidadSimple
  */
 class MetaBuilderTabularDSLTestDriver {
 
-  /* Otra variante de DSL, empleando parametros etiquetados, 
-   * un poco más redundante, 
-   * pero quizás mas intuitivo */
+  /* Basado en el estilo Block, pero empleando pipes como delimitadores */
 
   @Test
   void tabularStyle()  {
