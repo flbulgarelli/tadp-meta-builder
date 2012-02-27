@@ -26,17 +26,22 @@ el caso de uso típico será:
 
 En este proyecto contiene pruebas de concepto de 4 estilos diferentes de DSLs, desde mas sencillos hasta más complejos:
 * Estilo mensajes encadenados (ChainedStyle): nada raro, lo mismo que se podría lograr en Java Ej:
-```java
+
+```groovy
     receptor.mensaje1(valor1, valor2).mensaje2(valor3, valor4)
 ```
-* Estilo de bloque + métodos con paremtros nombrados (BlockStyle). Se logra tomando mapas como argumentos. Ej:
-``` 
+
+* Estilo de bloque y métodos con paremtros nombrados (BlockStyle). Se logra tomando mapas como argumentos. Ej:
+
+```groovy
      receptor.hacer {
         mensaje1 etiqueta1: valor1, etiqueta2: valor2
         mensaje2 etiqueta1: valor3, etiqueta2: valor4 
      }
 ```
+
 * Estilo de bloques anidados (NestedStyle): se logra haciendo uso de methodMissing y métodos que toman bloques por parámetros,  a los que se les cambia el delegate  Ej: 
+
 ```groovy
       receptor.hacer {
         bloque1 {
@@ -49,7 +54,9 @@ En este proyecto contiene pruebas de concepto de 4 estilos diferentes de DSLs, d
         }
       }
 ```
+
 * Estilo tabular (TabularStyle):  Se logra poniendo en el contexto del bloque objetos que entiendan el mensaje or, los cuales consituirán siempre la  primera columna de la tabla. Es necesario redefinir getProperty, para descubrir el orden en que son colocados los títulos  de la tabla. Ej:
+
 ```groovy
       receptor.hacer {
         titlo1 | titulo2 | titulo3
@@ -57,6 +64,7 @@ En este proyecto contiene pruebas de concepto de 4 estilos diferentes de DSLs, d
         valor4 | valor5  | valor6
       }
 ```
+
 
 # Estado de desarrollo
 
