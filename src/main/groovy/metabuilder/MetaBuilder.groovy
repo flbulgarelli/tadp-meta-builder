@@ -38,7 +38,7 @@ class MetaBuilder {
    * @return this
    */
   MetaBuilder withMandatoryProperty(name) {
-    _withPropertyClass(name, PropertyClasses.mandatory(name))
+    _withPropertyClass(PropertyClasses.mandatory(name))
   }
 
   /**
@@ -53,15 +53,15 @@ class MetaBuilder {
    * @return this
    */
   MetaBuilder withOptionalProperty(name, defaultValue = null) {
-    _withPropertyClass(name, PropertyClasses.optional(name, defaultValue))
+    _withPropertyClass(PropertyClasses.optional(name, defaultValue))
   }
 
   MetaBuilder withFixedProperty(name, value) {
-    _withPropertyClass(name, PropertyClasses.fixed(name, value))
+    _withPropertyClass(PropertyClasses.fixed(name, value))
   }
 
   MetaBuilder withCollectionProperty(name) {
-    _withPropertyClass(name, PropertyClasses.collection(name))
+    _withPropertyClass(PropertyClasses.collection(name))
   }
 
   MetaBuilder withTargetClass(targetClass) {
@@ -73,7 +73,7 @@ class MetaBuilder {
     constructor = new ClosureConstructor(closure)
   }
 
-  protected def _withPropertyClass(name, propertyClass) {
+  protected def _withPropertyClass(propertyClass) {
     propertyClassesMap << propertyClass
     this
   }
@@ -119,7 +119,7 @@ class NewBuilderDelegate {
 
   def fixedProperties(closure) {
     _property(closure) {name, args ->
-      metaBuilder.withFixedProperty(name, args.first())
+      metaBuilder.withFixedProperty(name, args.find())
     }
   }
 
