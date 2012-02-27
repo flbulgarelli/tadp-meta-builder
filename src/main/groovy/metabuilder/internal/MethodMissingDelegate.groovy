@@ -8,4 +8,8 @@ class MethodMissingDelegate {
   def methodMissing(String name, args) {
     closure(name, args)
   }
+  
+  def propertyMissing(String name) {
+    closure(name, [])
+  }
 }

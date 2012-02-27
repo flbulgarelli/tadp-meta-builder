@@ -141,7 +141,7 @@ class MetaBuilderTestDriver {
     def guerreroBuilderClass =
       MetaBuilder.newBuilder(Personaje) {
       optionalProperties {
-        nombre()
+        nombre
       }      
     }
 
@@ -154,7 +154,7 @@ class MetaBuilderTestDriver {
     def guerreroBuilderClass =
       MetaBuilder.newBuilder(Personaje) {
        mandatoryProperties { 
-         nombre()
+         nombre
        }
       }
     guerreroBuilderClass.newInstance().build()
@@ -165,7 +165,7 @@ class MetaBuilderTestDriver {
     def guerreroBuilderClass =
       MetaBuilder.newBuilder(Personaje) {
       mandatoryProperties {
-        nombre()
+        nombre
       }
     }
     guerreroBuilderClass.newInstance().withNombre(null).build()
