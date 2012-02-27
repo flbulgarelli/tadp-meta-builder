@@ -14,8 +14,24 @@ class GenericBuilderClass {
     builder.metaClass = metaClazz
     builder
   }
+  
+  def build(closure) {
+    def builder = newInstance()
+    closure.delegate = new BuildObjectDelegate(builder: builder)
+    closure()
+    builder.build()
+  }
 
   def newPropertiesMap() {
     propertiesInitialValues.newPropertiesMap()
+  }
+  
+}
+
+class BuildObjectDelegate {
+  GenericBuilder builder
+  
+  def propertyMissing(String name, value) {
+    builder._setProperty(name, value)
   }
 }

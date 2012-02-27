@@ -126,10 +126,10 @@ class MetaBuilderTestDriver {
         }
       }
 
-    def unAldeano= aldeanoBuilder.newInstance()
-      .withNombre('Pedro')
-      .withPuntosDeDefensa(4)
-      .build()
+    def unAldeano= aldeanoBuilder.build {
+      nombre = 'Pedro'
+      puntosDeDefensa = 4
+    }
 
     unAldeano.with {
       assert nombre == 'Pedro'
@@ -144,12 +144,13 @@ class MetaBuilderTestDriver {
   void optionalPropertiesMayBeNotConfigured()  {
     def guerreroBuilderClass =
       MetaBuilder.newBuilderClass(Personaje) {
-      optionalProperties {
-        nombre
-      }      
-    }
+        optionalProperties {
+          nombre
+        }      
+      }
 
-    def guerrero = guerreroBuilderClass.newInstance().build()
+    def guerrero = guerreroBuilderClass.build { }
+    
     assert guerrero.nombre == null
   }
 
@@ -161,7 +162,7 @@ class MetaBuilderTestDriver {
          nombre
        }
       }
-    guerreroBuilderClass.newInstance().build()
+    guerreroBuilderClass.build {}
   }
 
   @Test(expected = AssertionError)
@@ -185,15 +186,15 @@ class MetaBuilderTestDriver {
         }
       }
 
-    def guerreroBuilder = guerreroBuilderClass
-
-    assert guerreroBuilder.newInstance().build().nombre == "guerrero0"
-    assert guerreroBuilder.newInstance().build().nombre == "guerrero1"
+    assert guerreroBuilderClass.build({}).nombre == "guerrero0"
+    assert guerreroBuilderClass.build({}).nombre == "guerrero1"
   }
   
   /* Otra variante de DSL, empleando parametros etiquetados, 
    * un poco más redundante, 
    * pero quizás mas intuitivo */
+  
+  
   @Test
   void blockStyle()  {
     def aldeanoBuilder =
@@ -205,10 +206,10 @@ class MetaBuilderTestDriver {
         fixed     name: 'habilidades',     default: {[]}
       }
 
-    def unAldeano= aldeanoBuilder.newInstance()
-      .withNombre('Pedro')
-      .withPuntosDeDefensa(4)
-      .build()
+    def unAldeano= aldeanoBuilder.build {
+      nombre = 'Pedro'
+      puntosDeDefensa = 4
+    }
 
     unAldeano.with {
       assert nombre == 'Pedro'
@@ -243,8 +244,6 @@ class MetaBuilderTestDriver {
   void builderSupportsConstructorInjection()  {
     fail()
   }
-
-
 
 
 }

@@ -3,7 +3,7 @@ package metabuilder
 import metabuilder.constructor.ClosureConstructor
 import metabuilder.constructor.NewInstanceConstructor
 import metabuilder.injector.SetterInjector
-import metabuilder.internal.MethodMissingDelegate
+import metabuilder.nested.NewBuilderNestedStyleDelegate
 
 /*
  Copyright (c) 2012, The Staccato-Commons Team
@@ -90,41 +90,14 @@ class MetaBuilder {
     _buildWithClosure(new MetaBuilder().withTargetClass(targetClass), buildClosure)
   }
   
-  static GenericBuilderClass newBuilder(Closure factoryClosure, buildClosure) {
+  static GenericBuilderClass newBuilderClass(Closure factoryClosure, buildClosure) {
     _buildWithClosure(new MetaBuilder().withFactoryClosure(factoryClosure), buildClosure)
   }
   
   private static GenericBuilderClass _buildWithClosure(metaBuilder, Closure buildClosure) {
-    buildClosure.delegate = new NewBuilderDelegate(metaBuilder: metaBuilder)
+    buildClosure.delegate = new NewBuilderNestedStyleDelegate(metaBuilder: metaBuilder)
     buildClosure()
     metaBuilder.build()
   }
 }
 
-class NewBuilderDelegate {
-  MetaBuilder metaBuilder
-  
-  //  constructorInjection()
-  def mandatoryProperties(closure) {
-    _property(closure) {name, args ->
-      metaBuilder.withMandatoryProperty(name)
-    }
-  }
-
-  def optionalProperties(closure) {
-    _property(closure) {name, args ->
-      metaBuilder.withOptionalProperty(name, args.find())
-    }
-  }
-
-  def fixedProperties(closure) {
-    _property(closure) {name, args ->
-      metaBuilder.withFixedProperty(name, args.find())
-    }
-  }
-
-  protected def _property(Closure closure, methodMissingClosure) {
-    closure.delegate = new MethodMissingDelegate(methodMissingClosure)
-    closure()
-  }
-}
