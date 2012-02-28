@@ -6,7 +6,6 @@ import metabuilder.internal.MethodMissingDelegate
 class NewBuilderNestedStyleDelegate {
   MetaBuilder metaBuilder
   
-  //  constructorInjection()
   def mandatoryProperties(closure) {
     _property(closure) {name, args ->
       metaBuilder.withMandatoryProperty(name)

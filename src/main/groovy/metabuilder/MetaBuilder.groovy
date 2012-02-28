@@ -4,6 +4,7 @@ import metabuilder.constructor.ClosureConstructor
 import metabuilder.constructor.NewInstanceConstructor
 import metabuilder.injector.SetterInjector
 import metabuilder.nested.NewBuilderNestedStyleDelegate
+import metabuilder.tabular.NewBuilderTabularStyleDelegate
 
 
 /**
@@ -66,7 +67,6 @@ class MetaBuilder {
     this
   }
 
-
   GenericBuilderClass build() {
     assert constructor != null, "Must set a constructor"
     propertyClassesMap.copyTo(metaClazz)
@@ -74,16 +74,28 @@ class MetaBuilder {
     new GenericBuilderClass(metaClazz, propertyClassesMap, constructor, dependencyInjector)
   }
   
+  static GenericBuilderClass buildTabular(Class targetClass, buildClosure) {
+    _buildWithTabularDelegateClosure(new MetaBuilder().withTargetClass(targetClass), buildClosure)
+  }
+  
   static GenericBuilderClass build(Class targetClass, buildClosure) {
-    _buildWithClosure(new MetaBuilder().withTargetClass(targetClass), buildClosure)
+    _buildWithNestedDelegateClosure(new MetaBuilder().withTargetClass(targetClass), buildClosure)
   }
   
-  static GenericBuilderClass newBuilderClass(Closure factoryClosure, buildClosure) {
-    _buildWithClosure(new MetaBuilder().withFactoryClosure(factoryClosure), buildClosure)
+  static GenericBuilderClass build(Closure factoryClosure, buildClosure) {
+    _buildWithNestedDelegateClosure(new MetaBuilder().withFactoryClosure(factoryClosure), buildClosure)
   }
   
-  private static GenericBuilderClass _buildWithClosure(metaBuilder, Closure buildClosure) {
-    buildClosure.delegate = new NewBuilderNestedStyleDelegate(metaBuilder: metaBuilder)
+  private static GenericBuilderClass _buildWithNestedDelegateClosure(metaBuilder, Closure buildClosure) {
+    _buildWithClosure(metaBuilder, new NewBuilderNestedStyleDelegate(metaBuilder: metaBuilder),  buildClosure)
+  }
+  
+  private static GenericBuilderClass _buildWithTabularDelegateClosure(metaBuilder, Closure buildClosure) {
+    _buildWithClosure(metaBuilder, new NewBuilderTabularStyleDelegate(metaBuilder: metaBuilder),  buildClosure)
+  }
+  
+  private static GenericBuilderClass _buildWithClosure(metaBuilder, delegate, Closure buildClosure) {
+    buildClosure.delegate = delegate
     buildClosure()
     metaBuilder.build()
   }

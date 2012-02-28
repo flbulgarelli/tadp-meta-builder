@@ -69,6 +69,6 @@ En este proyecto contiene pruebas de concepto de 4 estilos diferentes de DSLs, d
 
 # Estado de desarrollo
 
-Por ahora solo están implementados los estilos Chained y Nested  
+Por ahora solo están implementados los estilos Chained, Nested  y Tabular, de forma parcial
 
     

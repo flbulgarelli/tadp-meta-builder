@@ -11,18 +11,20 @@ import Personaje.HabilidadSimple
  */
 class MetaBuilderTabularDSLTestDriver {
 
-  /* Basado en el estilo Block, pero empleando pipes como delimitadores */
+  /* Basado en el estilo Block, pero empleando pipes como delimitadores. 
+   * Salvo la primera columna, las columnas pueden ser reordenadas 
+   * y obtener el mismo resultado*/
 
   @Test
   void tabularStyle()  {
     def aldeanoBuilder =
       MetaBuilder.buildTabular(Personaje) {
-        type      |     name           |   defaultValue     | check
-        mandatory | 'nombre'           |   null             | { it.size() > 4 }
-        optional  | 'puntosDeAtaque'   |   2                | null
-        optional  | 'puntosDeDefensa'  |   1                | {it < 5}
-        optional  | 'puntosDeVida'     |   2                | {it < 40}
-        fixed     | 'habilidades'      |  {[]}              | null
+           name           |   defaultValue     |   type    |  check
+        nombre            |     'n/a'          | mandatory | { it.size() > 4 }
+        puntosDeAtaque    |       2            | optional  | null
+        puntosDeDefensa   |       1            | optional  | {it < 5}
+        puntosDeVida      |      25            | optional  | {it < 40}
+        habilidades       |     {[]}           | fixed     | 'n/a'
       }
 
     def unAldeano= aldeanoBuilder.build {
