@@ -19,12 +19,15 @@ class MetaBuilderTabularDSLTestDriver {
   void tabularStyle()  {
     def aldeanoBuilder =
       MetaBuilder.buildTabular(Personaje) {
+        '-----------------+--------------------+-----------+-----------------'
            name           |   defaultValue     |   type    |  check
+        '-----------------+--------------------+-----------+-----------------'   
         nombre            |     'n/a'          | mandatory | { it.size() > 4 }
         puntosDeAtaque    |       2            | optional  | null
         puntosDeDefensa   |       1            | optional  | {it < 5}
         puntosDeVida      |      25            | optional  | {it < 40}
         habilidades       |     {[]}           | fixed     | 'n/a'
+        '-----------------+--------------------+-----------+-----------------'
       }
 
     def unAldeano= aldeanoBuilder.build {
