@@ -60,9 +60,12 @@ En este proyecto contiene pruebas de concepto de 4 estilos diferentes de DSLs, d
 
 ```groovy
       receptor.hacer {
+      '--------+---------+---------'
         titlo1 | titulo2 | titulo3
+      '--------+---------+---------'
         valor1 | valor2  | valor3
         valor4 | valor5  | valor6
+      '--------+---------+---------'
       }
 ```
 
