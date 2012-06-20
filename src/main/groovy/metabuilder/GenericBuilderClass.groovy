@@ -17,8 +17,7 @@ class GenericBuilderClass {
   
   def build(closure) {
     def builder = newInstance()
-    closure.delegate = new BuildObjectDelegate(builder: builder)
-    closure()
+    new BuildObjectDelegate(builder: builder).with(closure)
     builder.build()
   }
 

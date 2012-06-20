@@ -95,8 +95,7 @@ class MetaBuilder {
   }
   
   private static GenericBuilderClass _buildWithClosure(metaBuilder, delegate, Closure buildClosure) {
-    buildClosure.delegate = delegate
-    buildClosure()
+    delegate.with(buildClosure)
     metaBuilder.build()
   }
 }

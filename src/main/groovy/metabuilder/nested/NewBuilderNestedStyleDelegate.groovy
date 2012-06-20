@@ -25,7 +25,6 @@ class NewBuilderNestedStyleDelegate {
   }
 
   protected def _property(Closure closure, methodMissingClosure) {
-    closure.delegate = new MethodMissingDelegate(methodMissingClosure)
-    closure()
+    new MethodMissingDelegate(methodMissingClosure).with(closure)
   }
 }
